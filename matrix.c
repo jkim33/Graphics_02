@@ -8,7 +8,7 @@
   1  1        1
   ==========================================*/
 
-#include <stdio.h>
+#include <stdio.h> 
 #include <stdlib.h>
 #include <math.h>
 
@@ -22,6 +22,17 @@ print the matrix such that it looks like
 the template in the top comment
 */
 void print_matrix(struct matrix *m) {
+  int i = 0;
+  while(i < m->rows){
+    int j = 0;
+    while(j < m->cols){
+      printf("%.2f\t", m->m[i][j]);
+      j++;
+    }
+    printf("\n");
+    i++;
+  }
+  printf("\n");
 }
 
 /*-------------- void ident() --------------
@@ -30,7 +41,22 @@ Inputs:  struct matrix *m <-- assumes m is a square matrix
 turns m in to an identity matrix
 */
 void ident(struct matrix *m) {
+  int i = 0;
+  while(i < m->rows){
+    int j = 0;
+    while(j < m->cols){
+      if(i == j){
+        m->m[i][j] = 1;
+      }
+      else{
+        m->m[i][j] = 0;
+      }
+      j++;
+    }
+    i++;
+  }
 }
+
 
 
 /*-------------- void matrix_mult() --------------
@@ -41,8 +67,19 @@ multiply a by b, modifying b to be the product
 a*b -> b
 */
 void matrix_mult(struct matrix *a, struct matrix *b) {
+  struct matrix *new = new_matrix(a -> rows, b -> cols);
+  int row,col,i;
+  for (row = 0; row < new -> rows; row++) {
+    for (col = 0; col < new -> cols; col++) {
+      new -> m[row][col] = 0;
+      for (i = 0; i < a -> cols; i++) {
+        new -> m[row][col] += a -> m[row][i] * b -> m[i][col];
+      }
+    }
+  }
+  copy_matrix(new, b);
+  free_matrix(new);
 }
-
 
 
 /*===============================================
@@ -129,3 +166,19 @@ void copy_matrix(struct matrix *a, struct matrix *b) {
     for (c=0; c < a->cols; c++)  
       b->m[r][c] = a->m[r][c];  
 }
+
+
+/*
+int main() {
+  struct matrix* m1 = new_matrix(4,4);
+  print_matrix(m1);
+  ident(m1);
+  print_matrix(m1);
+  struct matrix* m2 = new_matrix(4,4);
+  matrix_mult(m1,m2);
+  print_matrix(m2);
+  
+
+  return 0;
+}
+*/
