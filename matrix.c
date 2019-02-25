@@ -22,17 +22,12 @@ print the matrix such that it looks like
 the template in the top comment
 */
 void print_matrix(struct matrix *m) {
-  int i = 0;
-  while(i < m->rows){
-    int j = 0;
-    while(j < m->cols){
-      printf("%.2f\t", m->m[i][j]);
-      j++;
+  for (int row = 0; row < m->rows; row++) {
+    for (int col = 0; col < m->cols; col++) {
+      printf("%lf\t", m->m[row][col]);
     }
     printf("\n");
-    i++;
   }
-  printf("\n");
 }
 
 /*-------------- void ident() --------------
@@ -41,23 +36,17 @@ Inputs:  struct matrix *m <-- assumes m is a square matrix
 turns m in to an identity matrix
 */
 void ident(struct matrix *m) {
-  int i = 0;
-  while(i < m->rows){
-    int j = 0;
-    while(j < m->cols){
-      if(i == j){
-        m->m[i][j] = 1;
+  for (int row = 0; row < m->rows; row++) {
+    for (int col = 0; col < m->cols; col++) {
+      if(row == col) {
+	m->m[row][col] = 1;
       }
-      else{
-        m->m[i][j] = 0;
+      else {
+	m->m[row][col] = 0;
       }
-      j++;
     }
-    i++;
   }
 }
-
-
 
 /*-------------- void matrix_mult() --------------
 Inputs:  struct matrix *a
@@ -67,20 +56,18 @@ multiply a by b, modifying b to be the product
 a*b -> b
 */
 void matrix_mult(struct matrix *a, struct matrix *b) {
-  struct matrix *new = new_matrix(a -> rows, b -> cols);
-  int row,col,i;
-  for (row = 0; row < new -> rows; row++) {
-    for (col = 0; col < new -> cols; col++) {
-      new -> m[row][col] = 0;
-      for (i = 0; i < a -> cols; i++) {
-        new -> m[row][col] += a -> m[row][i] * b -> m[i][col];
+  struct matrix *temp = new_matrix(a -> rows, b -> cols);
+  for (int row = 0; row < temp -> rows; row++) {
+    for (int col = 0; col < temp -> cols; col++) {
+      temp -> m[row][col] = 0;
+      for (int i = 0; i < a -> cols; i++) {
+        temp -> m[row][col] += a -> m[row][i] * b -> m[i][col];
       }
     }
   }
-  copy_matrix(new, b);
-  free_matrix(new);
+  copy_matrix(temp, b);
+  free_matrix(temp);
 }
-
 
 /*===============================================
   These Functions do not need to be modified
